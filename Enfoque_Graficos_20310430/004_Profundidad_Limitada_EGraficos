@@ -1,0 +1,56 @@
+# Definimos la función para la búsqueda en profundidad limitada
+def dls(graph, start, goal, max_depth, depth=0, visited=None):
+    # Si no se ha proporcionado un conjunto de nodos visitados, lo creamos
+    if visited is None:
+        visited = set()
+    
+    # Añadimos el nodo actual a los nodos visitados
+    visited.add(start)
+    
+    # Imprimimos el nodo que estamos visitando y la profundidad actual
+    print("Visitando nodo:", start, "en profundidad:", depth)
+    
+    # Si hemos alcanzado el objetivo, devolvemos True
+    if start == goal:
+        return True
+    
+    # Si hemos alcanzado la profundidad máxima, terminamos esta rama de búsqueda
+    if depth == max_depth:
+        return False
+    
+    # Recorremos los nodos vecinos del nodo actual
+    for neighbor in graph[start]:
+        # Si el vecino no ha sido visitado
+        if neighbor not in visited:
+            # Llamamos recursivamente a la función DLS para el vecino
+            if dls(graph, neighbor, goal, max_depth, depth+1, visited):
+                return True
+    
+    # Si no se encontró el objetivo en esta rama, devolvemos False
+    return False
+
+# Grafo de ejemplo representado como un diccionario
+graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'D', 'E'],
+    'C': ['A', 'F'],
+    'D': ['B'],
+    'E': ['B', 'F'],
+    'F': ['C', 'E']
+}
+
+# Nodo de inicio y nodo objetivo para la búsqueda
+start_node = 'A'
+goal_node = 'F'
+
+# Profundidad máxima para la búsqueda en profundidad limitada
+max_depth = 3
+
+# Llamamos a la función DLS con el grafo, el nodo de inicio, el nodo objetivo y la profundidad máxima
+result = dls(graph, start_node, goal_node, max_depth)
+
+# Imprimimos el resultado de la búsqueda
+if result:
+    print("El nodo objetivo", goal_node, "fue encontrado.")
+else:
+    print("El nodo objetivo", goal_node, "no fue encontrado dentro de la profundidad máxima.")
