@@ -1,0 +1,23 @@
+import speech_recognition as sr
+
+# Creamos un objeto reconocedor
+reconocedor = sr.Recognizer()
+
+# Utilizamos el micrófono como fuente de audio
+with sr.Microphone() as source:
+    print("Di algo:")
+    # Escuchamos el audio del micrófono
+    audio = reconocedor.listen(source)
+
+try:
+    print("Reconociendo...")
+
+    # Utilizamos Google Speech Recognition para convertir el audio en texto
+    texto = reconocedor.recognize_google(audio, language="es-ES")
+    print("Has dicho:", texto)
+
+except sr.UnknownValueError:
+    print("No se pudo entender lo que dijiste")
+
+except sr.RequestError as e:
+    print("Error al recuperar los resultados; {0}".format(e))
