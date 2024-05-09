@@ -1,0 +1,29 @@
+import numpy as np
+import scipy.stats as stats
+
+# Creamos una lista de datos
+datos = [10, 15, 12, 18, 20, 14, 16, 17, 13, 11]
+
+# Calculamos la media
+media = np.mean(datos)
+
+# Calculamos la varianza
+varianza = np.var(datos)
+
+# Calculamos la desviación estándar
+desviacion_estandar = np.std(datos)
+
+# Calculamos la distribución normal
+# Definimos la distribución normal con la media y la desviación estándar calculadas
+distribucion_normal = stats.norm(media, desviacion_estandar)
+
+# Calculamos la probabilidad de que un valor esté dentro de ciertos rangos
+probabilidad_rango_1 = distribucion_normal.cdf(15)  # Probabilidad de que un valor sea menor o igual a 15
+probabilidad_rango_2 = distribucion_normal.sf(18)  # Probabilidad de que un valor sea mayor que 18
+
+# Imprimimos los resultados
+print("Media:", media)
+print("Varianza:", varianza)
+print("Desviación estándar:", desviacion_estandar)
+print("Probabilidad de que un valor sea menor o igual a 15:", probabilidad_rango_1)
+print("Probabilidad de que un valor sea mayor que 18:", probabilidad_rango_2)
