@@ -1,0 +1,19 @@
+class FormulaPrimerOrden:
+    def __init__(self, predicado, variables):
+        self.predicado = predicado
+        self.variables = variables
+
+    def mostrar_formula(self):
+        return f"{self.predicado}({', '.join(self.variables)})"
+
+    def cambiar_variable(self, variable_a_cambiar, nueva_variable):
+        for i in range(len(self.variables)):
+            if self.variables[i] == variable_a_cambiar:
+                self.variables[i] = nueva_variable
+
+# Ejemplo de uso
+formula = FormulaPrimerOrden("P", ["x", "y"])
+print("Fórmula original:", formula.mostrar_formula())
+
+formula.cambiar_variable("x", "z")
+print("Fórmula con variable cambiada:", formula.mostrar_formula())
