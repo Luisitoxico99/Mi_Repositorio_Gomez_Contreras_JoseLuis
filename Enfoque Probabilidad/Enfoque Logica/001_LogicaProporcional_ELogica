@@ -1,0 +1,10 @@
+# Definimos las variables p, q y r
+p = True
+q = False
+r = True
+
+# Evaluamos la expresión lógica (p and q) or (not r)
+resultado = (p and q) or (not r)
+
+# Imprimimos el resultado
+print("El resultado de la expresión lógica es:", resultado)
