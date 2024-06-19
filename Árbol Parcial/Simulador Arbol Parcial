@@ -1,1 +1,85 @@
+import networkx as nx
+import matplotlib.pyplot as plt
 
+def prim_mst(graph):
+    nodes = list(graph.nodes())
+    n = len(nodes)
+
+
+    mst = []   #Inicialización del MST 
+    visited = {node: False for node in nodes}
+    min_edge = {node: (None, float('inf')) for node in nodes}
+
+    start_node = nodes[0]  # Comenzamos desde el primer nodo
+
+    for _ in range(n):
+        visited[start_node] = True
+
+        #Actualizamos las aristas mínimas requeridas 
+        for neighbor, weight in graph[start_node].items():
+            if not visited[neighbor] and weight['weight'] < min_edge[neighbor][1]:
+                min_edge[neighbor] = (start_node, weight['weight'])
+
+        #Buscamos la siguiente arista menor
+        next_node = None
+        min_weight = float('inf')
+        for node, data in min_edge.items():
+            if not visited[node] and data[1] < min_weight:
+                next_node = node
+                min_weight = data[1]
+
+        if next_node is not None:
+            # Añadimos la arista al MST
+            mst.append((min_edge[next_node][0], next_node, min_edge[next_node][1]))
+            start_node = next_node
+    
+    return mst
+
+def visualize_graph(graph, mst_edges=None):
+    pos = nx.spring_layout(graph)  #Posiciones para graficar
+    nx.draw(graph, pos, with_labels=True, node_color='skyblue', node_size=1500, font_size=10, font_color='black')
+
+    #Dibujar aristas del MST en rosita fresita si se proporcionan
+    if mst_edges:
+        mst_edges = [(edge[0], edge[1]) for edge in mst_edges]
+        nx.draw_networkx_edges(graph, pos, edgelist=mst_edges, edge_color='pink', width=2)
+
+    #Etiquetas de las aristas con su digito
+    edge_labels = {(u, v): d['weight'] for u, v, d in graph.edges(data=True)}
+    nx.draw_networkx_edge_labels(graph, pos, edge_labels=edge_labels, label_pos=0.3, font_size=10)
+
+    plt.title('Simulador de Árbol de Expansión Mínima (Prim)')
+    plt.show()
+
+def main():
+    #Parte Grafica
+    G = nx.Graph()
+    nodes = ['Estacion 1', 'Estacion 2', 'Estacion 3', 'Estacion 4', 'Estacion 5', 'Estacion 6', 'Estacion 7']
+    edges = [
+        ('Estacion 1', 'Estacion 2', {'weight': 2}),
+        ('Estacion 1', 'Estacion 3', {'weight': 5}),
+        ('Estacion 2', 'Estacion 3', {'weight': 2}),
+        ('Estacion 2', 'Estacion 4', {'weight': 1}),
+        ('Estacion 3', 'Estacion 5', {'weight': 4}),
+        ('Estacion 4', 'Estacion 5', {'weight': 3}),
+        ('Estacion 4', 'Estacion 6', {'weight': 6}),
+        ('Estacion 5', 'Estacion 7', {'weight': 7}),
+        ('Estacion 6', 'Estacion 7', {'weight': 2})
+    ]
+
+    G.add_edges_from(edges)
+
+    #Ejecutar el algoritmo de Prim para encontrar el MST
+    mst_edges = prim_mst(G)
+    print("Aristas del Árbol de Expansión Mínima (Prim):")
+    total_weight = 0
+    for edge in mst_edges:
+        print(edge)
+        total_weight += edge[2]
+    print("Peso total del MST:", total_weight)
+
+    #visualización gráfica del grafo y del MST final
+    visualize_graph(G, mst_edges)
+
+if __name__ == "__main__":
+    main()
