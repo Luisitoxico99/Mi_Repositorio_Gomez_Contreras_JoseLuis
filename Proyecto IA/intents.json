@@ -1,0 +1,94 @@
+{
+    "intents": [
+        {
+            "tag": "problema_motor_no_arranca",
+            "patterns": ["el motor no arranca", "por qué el motor no enciende", "motor sin encender"],
+            "responses": [
+                "Verifica si hay alimentación eléctrica.",
+                "Revisa los fusibles y el interruptor de encendido.",
+                "Comprueba el estado de las conexiones eléctricas."
+            ]
+        },
+        {
+            "tag": "problema_motor_se_sobrecalienta",
+            "patterns": ["el motor se sobrecalienta", "motor caliente", "temperatura alta en motor"],
+            "responses": [
+                "Asegúrate de que el motor no esté funcionando sobrecargado.",
+                "Revisa el sistema de ventilación.",
+                "Verifica el estado del aislamiento de los devanados."
+            ]
+        },
+        {
+            "tag": "problema_motor_vibracion",
+            "patterns": ["el motor vibra", "motor con vibración", "vibración en el motor"],
+            "responses": [
+                "Verifica si hay desbalance en las partes móviles.",
+                "Comprueba si los rodamientos están en buen estado.",
+                "Revisa si hay piezas sueltas o desgastadas."
+            ]
+        },
+        {
+            "tag": "problema_motor_ruido",
+            "patterns": ["el motor hace ruido", "ruido en el motor", "motor ruidoso"],
+            "responses": [
+                "Comprueba si hay piezas sueltas o desgastadas.",
+                "Verifica el estado de los rodamientos.",
+                "Asegúrate de que no haya objetos extraños en el motor."
+            ]
+        },
+        {
+            "tag": "problema_motor_potencia",
+            "patterns": ["el motor no tiene potencia", "falta de potencia en el motor", "motor sin fuerza"],
+            "responses": [
+                "Revisa la alimentación eléctrica.",
+                "Comprueba si el motor está sobrecargado.",
+                "Verifica el estado de los devanados."
+            ]
+        },
+        {
+            "tag": "solucion_motor_no_arranca",
+            "patterns": ["cómo solucionar que el motor no arranque", "solución para motor que no enciende"],
+            "responses": [
+                "Revisa el suministro eléctrico y asegúrate de que haya corriente.",
+                "Inspecciona los fusibles y reemplázalos si es necesario.",
+                "Asegúrate de que los interruptores y las conexiones estén en buen estado."
+            ]
+        },
+        {
+            "tag": "solucion_motor_se_sobrecalienta",
+            "patterns": ["cómo solucionar sobrecalentamiento en el motor", "solución para motor caliente"],
+            "responses": [
+                "Disminuye la carga de trabajo del motor.",
+                "Asegúrate de que el sistema de enfriamiento esté funcionando correctamente.",
+                "Revisa el aislamiento de los devanados y repáralos si es necesario."
+            ]
+        },
+        {
+            "tag": "solucion_motor_vibracion",
+            "patterns": ["cómo solucionar la vibración del motor", "solución para motor vibrante"],
+            "responses": [
+                "Balancea las partes móviles del motor.",
+                "Reemplaza los rodamientos si están desgastados.",
+                "Asegúrate de que todas las piezas estén correctamente ajustadas."
+            ]
+        },
+        {
+            "tag": "solucion_motor_ruido",
+            "patterns": ["cómo solucionar el ruido del motor", "solución para motor ruidoso"],
+            "responses": [
+                "Ajusta o reemplaza las piezas sueltas o desgastadas.",
+                "Lubrica los rodamientos o reemplázalos si es necesario.",
+                "Elimina cualquier objeto extraño del motor."
+            ]
+        },
+        {
+            "tag": "solucion_motor_potencia",
+            "patterns": ["cómo solucionar la falta de potencia del motor", "solución para motor sin fuerza"],
+            "responses": [
+                "Asegúrate de que la alimentación eléctrica sea la adecuada.",
+                "Reduce la carga de trabajo del motor.",
+                "Repara o reemplaza los devanados dañados."
+            ]
+        }
+    ]
+}
