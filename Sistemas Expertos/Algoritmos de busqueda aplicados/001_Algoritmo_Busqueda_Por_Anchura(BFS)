@@ -1,1 +1,38 @@
-0
+from collections import deque
+
+def bfs_tiendas(grafo, inicio, objetivo):
+    # Cola para BFS
+    cola = deque([inicio])
+    # Diccionario para almacenar el camino más corto
+    caminos = {inicio: []}
+    print(f"Inicio BFS desde: {inicio}")
+
+    while cola:
+        nodo = cola.popleft()
+        print(f"Visitando nodo: {nodo}")
+        # Verifica si hemos llegado al objetivo
+        if nodo == objetivo:
+            print(f"Encontrado objetivo: {nodo}")
+            return caminos[nodo] + [nodo]
+        
+        # Recorre las tiendas conectadas al nodo actual
+        for tienda in grafo[nodo]:
+            if tienda not in caminos:
+                cola.append(tienda)
+                caminos[tienda] = caminos[nodo] + [nodo]
+                print(f"Agregando a cola: {tienda}")
+    
+    return None  # Si no se encuentra un camino
+
+# Ejemplo de grafo representado como un diccionario de listas de adyacencia
+grafo = {
+    'Soriana': ['Bodega Ahorrera', 'El Baraton'],
+    'Bodega Ahorrera': ['Soriana', 'El Baraton', 'Walmart'],
+    'El Baraton': ['Soriana', 'Bodega Ahorrera', 'City Club'],
+    'Walmart': ['Bodega Ahorrera'],
+    'City Club': ['El Baraton']
+}
+
+# Encontrar el camino más corto entre Soriana y Walmart
+camino = bfs_tiendas(grafo, 'Soriana', 'Walmart')
+print("Camino más corto entre Soriana y Walmart:", camino)
