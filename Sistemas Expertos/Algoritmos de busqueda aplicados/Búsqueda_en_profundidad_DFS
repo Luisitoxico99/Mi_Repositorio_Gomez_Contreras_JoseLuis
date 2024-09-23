@@ -1,0 +1,54 @@
+# Importar la biblioteca de pila
+stack = []
+
+# Definimos el laberinto (0 es camino, 1 es pared)
+maze = [
+    [0, 1, 0, 0, 0],
+    [0, 1, 0, 1, 0],
+    [0, 0, 0, 1, 0],
+    [1, 1, 0, 0, 0],
+    [0, 0, 1, 1, 0]
+]
+
+# Tamaño del laberinto
+rows = len(maze)
+cols = len(maze[0])
+
+# Coordenadas de inicio y fin
+start = (0, 0)  # Esquina superior izquierda
+end = (4, 4)    # Esquina inferior derecha
+
+# Función para verificar si las coordenadas son válidas
+def is_valid(x, y):
+    return 0 <= x < rows and 0 <= y < cols and maze[x][y] == 0
+
+# Función para realizar DFS
+def dfs(start):
+    stack.append(start)  # Agrega el inicio a la pila
+    visited = set()      # Conjunto para rastrear nodos visitados
+
+    while stack:
+        current = stack.pop()  # Toma el último nodo de la pila
+        x, y = current
+
+        if current == end:  # Si hemos llegado al final
+            return True
+        
+        if current in visited:  # Si ya hemos visitado este nodo
+            continue
+
+        visited.add(current)  # Marca el nodo como visitado
+
+        # Explorar los vecinos (arriba, abajo, izquierda, derecha)
+        neighbors = [(x-1, y), (x+1, y), (x, y-1), (x, y+1)]
+        for neighbor in neighbors:
+            if is_valid(neighbor[0], neighbor[1]):  # Si es un camino válido
+                stack.append(neighbor)  # Agrega el vecino a la pila
+
+    return False  # No se encontró un camino
+
+# Ejecutar DFS
+if dfs(start):
+    print("Se encontró un camino!")
+else:
+    print("No se encontró un camino.")
