@@ -1,0 +1,79 @@
+import random
+import matplotlib.pyplot as plt
+import networkx as nx
+
+# Definimos las distancias entre los lugares
+distances = {
+    ('Departamento 1', 'Casa 1'): 2,
+    ('Departamento 1', 'Privada Residencial'): 4,
+    ('Casa 1', 'Privada Residencial'): 1,
+    ('Casa 1', 'Departamento 2'): 3,
+    ('Privada Residencial', 'Casa Lujosa'): 5,
+    ('Departamento 2', 'Casa Lujosa'): 2,
+    ('Casa Lujosa', 'Casa en Bosque'): 10,  # Mayor distancia
+    ('Departamento 2', 'Casa en Bosque'): 8,
+}
+
+# Función para calcular la distancia total de un recorrido
+def total_distance(path):
+    distance = 0
+    for i in range(len(path) - 1):
+        distance += distances.get((path[i], path[i + 1]), distances.get((path[i + 1], path[i]), 0))
+    return distance
+
+# Búsqueda local (Hill Climbing)
+def hill_climbing(start):
+    # Inicializamos el camino con todas las casas
+    current_path = ['Departamento 1', 'Casa 1', 'Privada Residencial', 'Departamento 2', 'Casa Lujosa', 'Casa en Bosque']
+    current_distance = total_distance(current_path)
+
+    while True:
+        neighbors = []  # Lista para almacenar caminos vecinos
+        for i in range(len(current_path)):
+            for j in range(i + 1, len(current_path)):
+                # Intercambiamos las posiciones de dos lugares para crear un nuevo camino
+                new_path = current_path[:]
+                new_path[i], new_path[j] = new_path[j], new_path[i]
+                neighbors.append(new_path)
+
+        # Buscamos el mejor camino vecino
+        best_neighbor = min(neighbors, key=total_distance)
+        best_distance = total_distance(best_neighbor)
+
+        # Si el mejor vecino es mejor que el actual, lo aceptamos
+        if best_distance < current_distance:
+            current_path = best_neighbor
+            current_distance = best_distance
+        else:
+            break  # Si no hay mejoras, salimos
+
+    return current_path, current_distance
+
+# Ejecutar la búsqueda local
+start = 'Departamento 1'
+best_path, best_distance = hill_climbing(start)
+
+# Mostrar el resultado
+print("El mejor camino encontrado es:", best_path)
+print("La distancia total es:", best_distance)
+
+# Función para dibujar el grafo
+def draw_graph():
+    G = nx.Graph()
+    
+    # Agregar nodos y aristas al grafo
+    for (lugar1, lugar2), dist in distances.items():
+        G.add_edge(lugar1, lugar2, weight=dist)
+
+    pos = nx.spring_layout(G)  # Generar posiciones para los nodos
+    labels = nx.get_edge_attributes(G, 'weight')
+    
+    # Dibujar el grafo
+    nx.draw(G, pos, with_labels=True, node_color='lightblue', node_size=2000, font_size=10, font_color='black')
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
+    
+    plt.title('Grafo de lugares en el vecindario')
+    plt.show()
+
+# Llamar a la función de visualización
+draw_graph()
