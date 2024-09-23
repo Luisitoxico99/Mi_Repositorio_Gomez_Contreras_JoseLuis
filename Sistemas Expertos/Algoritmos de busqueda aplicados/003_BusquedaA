@@ -1,0 +1,65 @@
+import heapq  # Para usar una cola de prioridad
+
+# Definimos el grafo como un diccionario
+graph = {
+    'Cafetería Lola A': {'Snacks B': 1, 'Flor de Córdoba C': 4},
+    'Snacks B': {'Flor de Córdoba C': 2, 'Café y Panesito D': 5},
+    'Flor de Córdoba C': {'Café y Panesito D': 1, 'Starbucks E': 3},
+    'Café y Panesito D': {'Starbucks E': 2},
+    'Starbucks E': {}
+}
+
+# Función de heurística (distancia estimada)
+def heuristic(node, goal):
+    distances = {
+        'Cafetería Lola A': 4,
+        'Snacks B': 3,
+        'Flor de Córdoba C': 2,
+        'Café y Panesito D': 1,
+        'Starbucks E': 0
+    }
+    return distances[node]
+
+# Implementación de A*
+def astar(start, goal):
+    open_set = []  # Nodos a explorar
+    heapq.heappush(open_set, (0, start))  # Agrega el nodo inicial
+    came_from = {}  # Para rastrear el camino
+    g_score = {start: 0}  # Coste desde el inicio
+    f_score = {start: heuristic(start, goal)}  # Estimación total
+
+    while open_set:
+        current = heapq.heappop(open_set)[1]  # Nodo actual
+
+        if current == goal:  # Si hemos llegado al destino
+            return reconstruct_path(came_from, current)
+
+        # Explorar los vecinos
+        for neighbor, cost in graph[current].items():
+            tentative_g_score = g_score[current] + cost  # Coste del vecino
+
+            if tentative_g_score < g_score.get(neighbor, float('inf')):  # Mejor camino encontrado
+                came_from[neighbor] = current
+                g_score[neighbor] = tentative_g_score
+                f_score[neighbor] = tentative_g_score + heuristic(neighbor, goal)
+
+                if neighbor not in [i[1] for i in open_set]:  # Si el vecino no está en open_set
+                    heapq.heappush(open_set, (f_score[neighbor], neighbor))
+
+    return []  # No se encontró un camino
+
+# Reconstruir el camino
+def reconstruct_path(came_from, current):
+    total_path = [current]
+    while current in came_from:
+        current = came_from[current]
+        total_path.append(current)
+    return total_path[::-1]  # Devuelve el camino de inicio a fin
+
+# Ejecutar A*
+start = 'Cafetería Lola A'  # Punto de inicio
+goal = 'Starbucks E'  # Punto final
+path = astar(start, goal)
+
+# Mostrar el resultado
+print("El camino más corto desde", start, "hasta", goal, "es:", path)
