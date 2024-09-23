@@ -1,0 +1,101 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import heapq  # Para usar una cola de prioridad
+
+# Definimos el grafo como un diccionario
+graph = {
+    'Casa': {'Cafetería': 2, 'Supermercado': 4},
+    'Cafetería': {'Parque': 1, 'Oficina': 5},
+    'Supermercado': {'Parque': 3, 'Oficina': 2},
+    'Parque': {'Oficina': 1},
+    'Oficina': {}
+}
+
+# Función de heurística (distancia estimada)
+def heuristic(node, goal):
+    # Distancias heurísticas desde cada nodo hasta el objetivo
+    distances = {
+        'Casa': 6,
+        'Cafetería': 5,
+        'Supermercado': 3,
+        'Parque': 1,
+        'Oficina': 0
+    }
+    return distances[node]
+
+# Implementación de Búsqueda Informada (similar a A*)
+def informed_search(start, goal):
+    open_set = []  # Nodos a explorar
+    heapq.heappush(open_set, (0, start))  # Agrega el nodo inicial
+    came_from = {}  # Para rastrear el camino
+    g_score = {start: 0}  # Coste desde el inicio
+    f_score = {start: heuristic(start, goal)}  # Estimación total
+
+    while open_set:
+        current = heapq.heappop(open_set)[1]  # Nodo actual
+
+        if current == goal:  # Si hemos llegado al destino
+            return reconstruct_path(came_from, current)
+
+        # Explorar los vecinos
+        for neighbor, cost in graph[current].items():
+            tentative_g_score = g_score[current] + cost  # Coste del vecino
+
+            if tentative_g_score < g_score.get(neighbor, float('inf')):  # Mejor camino encontrado
+                came_from[neighbor] = current
+                g_score[neighbor] = tentative_g_score
+                f_score[neighbor] = tentative_g_score + heuristic(neighbor, goal)
+
+                if neighbor not in [i[1] for i in open_set]:  # Si el vecino no está en open_set
+                    heapq.heappush(open_set, (f_score[neighbor], neighbor))
+
+    return []  # No se encontró un camino
+
+# Reconstruir el camino
+def reconstruct_path(came_from, current):
+    total_path = [current]
+    while current in came_from:
+        current = came_from[current]
+        total_path.append(current)
+    return total_path[::-1]  # Devuelve el camino de inicio a fin
+
+# Ejecutar Búsqueda Informada
+start = 'Casa'  # Punto de inicio
+goal = 'Oficina'  # Punto final
+path = informed_search(start, goal)
+
+# Mostrar el resultado
+print("El camino más corto desde", start, "hasta", goal, "es:", path)
+
+# Visualización gráfica
+def plot_path(graph, path):
+    # Coordenadas de los puntos
+    coordinates = {
+        'Casa': (0, 0),
+        'Cafetería': (2, 1),
+        'Supermercado': (4, 0),
+        'Parque': (2, 3),
+        'Oficina': (5, 2)
+    }
+
+    # Dibujar los puntos
+    for point, coord in coordinates.items():
+        plt.scatter(*coord, label=point)
+        plt.text(coord[0], coord[1], point)
+
+    # Dibujar las líneas del camino
+    if path:
+        for i in range(len(path) - 1):
+            start_coord = coordinates[path[i]]
+            end_coord = coordinates[path[i + 1]]
+            plt.plot([start_coord[0], end_coord[0]], [start_coord[1], end_coord[1]], 'r-')
+
+    plt.title('Ruta más corta usando Búsqueda Informada')
+    plt.xlabel('Coordenadas X')
+    plt.ylabel('Coordenadas Y')
+    plt.legend()
+    plt.grid()
+    plt.show()
+
+# Llamar a la función de visualización
+plot_path(graph, path)
