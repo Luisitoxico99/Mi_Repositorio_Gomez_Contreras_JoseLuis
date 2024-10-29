@@ -1,0 +1,71 @@
+import tkinter as tk
+from tkinter import messagebox
+import random
+
+# Elementos del juego
+personajes = [
+    {"nombre": "Sr. Tanaka", "origen": "Asiático con raíces japonesas", "ocupación": "Ex piloto kamikaze", "historia": "Tenía cuentas pendientes con la víctima."},
+    {"nombre": "Sra. López", "origen": "Latina", "ocupación": "Ama de casa", "historia": "Sra. López fue vista discutiendo con la víctima, pero resulta que solo defendía el honor de su familia en una disputa trivial."},
+    {"nombre": "Dr. Brown", "origen": "Estadounidense", "ocupación": "Científico", "historia": "Dr. Brown había perdido un descubrimiento importante, pero ese día estaba presentando su investigación en una conferencia y no pudo ser el culpable."},
+    {"nombre": "Sra. Smith", "origen": "Inglesa", "ocupación": "Abogada", "historia": "Sra. Smith fue demandada por la víctima hace años, pero ahora habían dejado las diferencias de lado y recientemente tomaron el té juntos."},
+    {"nombre": "Sr. Chen", "origen": "Chino", "ocupación": "Empresario", "historia": "El Sr. Chen tuvo problemas financieros por la víctima, pero ha demostrado que estaba en el gimnasio al momento del asesinato."}
+]
+
+locaciones = ["Lobby", "Biblioteca", "Gimnasio", "Estacionamiento", "Cuarto de la víctima"]
+armas = ["Cuchillo", "Machete", "Pistola", "Veneno", "Katana"]
+
+# Solución correcta
+solucion_personaje = "Sr. Tanaka"
+solucion_locacion = "Cuarto de la víctima"
+solucion_arma = "Katana"
+
+# Interfaz gráfica
+ventana = tk.Tk()
+ventana.title("Clue: Hotel Mystery")
+
+# Variables de selección
+seleccion_personaje = tk.StringVar()
+seleccion_locacion = tk.StringVar()
+seleccion_arma = tk.StringVar()
+
+# Función para verificar la respuesta
+def verificar_respuesta():
+    personaje = seleccion_personaje.get()
+    locacion = seleccion_locacion.get()
+    arma = seleccion_arma.get()
+    
+    if personaje == solucion_personaje and locacion == solucion_locacion and arma == solucion_arma:
+        resultado_label.config(text="Lo haz conseguido, el asesino fue un piloto kamikaze que tenía cuentas pendientes, se camuflajeó como turista y llevó su katana para ejercer tal venganza. ¡Lo bueno es que ahora la justicia se hará cargo! ¡Felicidades!")
+    else:
+        # Buscar la historia del personaje elegido para justificar su inocencia
+        personaje_info = next(p for p in personajes if p["nombre"] == personaje)
+        historia = f"Has seleccionado al {personaje_info['nombre']}, pero {personaje_info['historia']}"
+        resultado_label.config(text=historia)
+
+# Instrucciones
+tk.Label(ventana, text="Resuelve el misterio: ¿Quién es el asesino? ¿Con qué arma? ¿Y dónde ocurrió?").pack()
+
+# Selección de personaje
+tk.Label(ventana, text="Selecciona al sospechoso:").pack()
+for p in personajes:
+    tk.Radiobutton(ventana, text=p["nombre"], variable=seleccion_personaje, value=p["nombre"]).pack(anchor="w")
+
+# Selección de locación
+tk.Label(ventana, text="Selecciona la locación:").pack()
+for l in locaciones:
+    tk.Radiobutton(ventana, text=l, variable=seleccion_locacion, value=l).pack(anchor="w")
+
+# Selección de arma
+tk.Label(ventana, text="Selecciona el arma:").pack()
+for a in armas:
+    tk.Radiobutton(ventana, text=a, variable=seleccion_arma, value=a).pack(anchor="w")
+
+# Botón para verificar
+boton_verificar = tk.Button(ventana, text="Verificar", command=verificar_respuesta)
+boton_verificar.pack()
+
+# Etiqueta de resultado
+resultado_label = tk.Label(ventana, text="")
+resultado_label.pack()
+
+ventana.mainloop()
