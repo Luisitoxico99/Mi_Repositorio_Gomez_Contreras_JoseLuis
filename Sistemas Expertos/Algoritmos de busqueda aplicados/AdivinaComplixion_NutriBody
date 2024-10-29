@@ -1,0 +1,104 @@
+import tkinter as tk
+from tkinter import messagebox
+import pickle
+import os
+
+nombre_archivo = "datos_cuerpo.pkl"
+
+# Cargar la base de datos de resultados anteriores
+def cargar_datos():
+    if os.path.exists(nombre_archivo):
+        with open(nombre_archivo, "rb") as archivo:
+            return pickle.load(archivo)
+    return []
+
+# Guardar datos
+def guardar_datos(datos):
+    with open(nombre_archivo, "wb") as archivo:
+        pickle.dump(datos, archivo)
+
+# Función para deducir el tipo de cuerpo
+def calcular_tipo_cuerpo():
+    try:
+        peso = float(entrada_peso.get())
+        altura = float(entrada_altura.get())
+        actividad_fisica = "Sí" if entrada_actividad.get().lower() == "si" else "No"
+        dieta_nutritiva = "Sí" if entrada_dieta.get().lower() == "si" else "No"
+        energia_baja = "Sí" if entrada_energia.get().lower() == "si" else "No"
+
+        # Relación peso-altura
+        altura_ideal_mesomorfo = peso * 2.25
+        rango_error = 5  # Rango de error de +-5 cm
+
+        # Determinar tipo de cuerpo
+        if altura > altura_ideal_mesomorfo + rango_error:
+            tipo_cuerpo = "Ectomorfo"
+            if energia_baja == "Sí":
+                resultado = "Tu tipo de cuerpo es Ectomorfo y parece que tienes problemas de nutrición. Se recomienda consultar a un profesional."
+            else:
+                resultado = "Tu tipo de cuerpo es Ectomorfo."
+        elif altura_ideal_mesomorfo - rango_error <= altura <= altura_ideal_mesomorfo + rango_error:
+            tipo_cuerpo = "Mesomorfo"
+            resultado = "Tu tipo de cuerpo es Mesomorfo."
+        else:
+            tipo_cuerpo = "Endomorfo"
+            resultado = "Tu tipo de cuerpo es Endomorfo."
+
+        resultado_label.config(text=resultado)
+        
+        # Guardar resultados
+        datos.append({"peso": peso, "altura": altura, "tipo_cuerpo": tipo_cuerpo, "actividad": actividad_fisica, "dieta": dieta_nutritiva, "energia_baja": energia_baja})
+        guardar_datos(datos)
+
+    except ValueError:
+        messagebox.showinfo("Error", "Por favor, introduce valores numéricos en peso y altura.")
+
+# Reiniciar el test
+def reiniciar():
+    entrada_peso.delete(0, tk.END)
+    entrada_altura.delete(0, tk.END)
+    entrada_actividad.delete(0, tk.END)
+    entrada_dieta.delete(0, tk.END)
+    entrada_energia.delete(0, tk.END)
+    resultado_label.config(text="")
+
+# Cargar datos previos
+datos = cargar_datos()
+
+# Interfaz gráfica
+ventana = tk.Tk()
+ventana.title("NutriBody")
+
+# Preguntas y entradas
+tk.Label(ventana, text="¿Cuánto pesas? (kg)").pack()
+entrada_peso = tk.Entry(ventana)
+entrada_peso.pack()
+
+tk.Label(ventana, text="¿Cuánto mides? (cm)").pack()
+entrada_altura = tk.Entry(ventana)
+entrada_altura.pack()
+
+tk.Label(ventana, text="¿Haces mucha actividad física? (Sí/No)").pack()
+entrada_actividad = tk.Entry(ventana)
+entrada_actividad.pack()
+
+tk.Label(ventana, text="¿Consideras que comes mayormente nutritivo? (Sí/No)").pack()
+entrada_dieta = tk.Entry(ventana)
+entrada_dieta.pack()
+
+tk.Label(ventana, text="¿Pierdes energía rápido en el día? (Sí/No)").pack()
+entrada_energia = tk.Entry(ventana)
+entrada_energia.pack()
+
+# Botones
+boton_calcular = tk.Button(ventana, text="Calcular Tipo de Cuerpo", command=calcular_tipo_cuerpo)
+boton_calcular.pack()
+
+boton_reiniciar = tk.Button(ventana, text="Reiniciar Test", command=reiniciar)
+boton_reiniciar.pack()
+
+# Resultado
+resultado_label = tk.Label(ventana, text="", wraplength=300)
+resultado_label.pack()
+
+ventana.mainloop()
