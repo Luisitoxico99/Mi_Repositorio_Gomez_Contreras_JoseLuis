@@ -1,0 +1,4 @@
+manchas:Podría ser un hongo. Aplica un tratamiento antifúngico.
+amarillo:Hojas amarillas suelen indicar falta de nutrientes.
+olor:El mal olor podría ser un problema en las raíces. Revisa el riego.
+hola:Gracias por tu pregunta. Estoy trabajando para darte una mejor respuesta.
