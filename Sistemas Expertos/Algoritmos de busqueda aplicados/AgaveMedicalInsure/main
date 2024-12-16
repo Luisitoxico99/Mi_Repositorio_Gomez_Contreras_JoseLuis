@@ -1,0 +1,76 @@
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivy.uix.button import Button
+from kivy.uix.widget import Widget
+from kivy.graphics import Color, Ellipse, Rectangle
+from gui.interfaz import MenuPrincipal
+from gui.consultar import PreMenuConsulta, Cuestionario, Resultado
+
+
+class MainApp(App):
+    def build(self):
+        # Layout principal que contendrá las pantallas
+        self.root_layout = BoxLayout(orientation='vertical')
+
+        # Cargar el menú principal al inicio
+        self.mostrar_menu_principal()
+
+        return self.root_layout
+
+    def mostrar_menu_principal(self, *args):
+        # Limpiar el layout y cargar el menú principal
+        self.root_layout.clear_widgets()
+        menu = MenuPrincipal(
+            iniciar_consulta_callback=self.mostrar_premenu_consulta,
+            salir_callback=self.salir_app
+        )
+        self.root_layout.add_widget(menu)
+
+    def mostrar_premenu_consulta(self, *args):
+        # Limpiar el layout y cargar el premenú de consulta
+        self.root_layout.clear_widgets()
+        premenu_consulta = PreMenuConsulta(iniciar_consulta_callback=self.iniciar_consulta)
+        self.root_layout.add_widget(premenu_consulta)
+
+    def iniciar_consulta(self, *args):
+        # Preguntas para el cuestionario
+        preguntas = [
+            {"pregunta": "¿El color de las hojas es amarillo?", "tipo": "cerrada", "opciones": ["Sí", "No"]},
+            {"pregunta": "¿Hay manchas marrones visibles?", "tipo": "cerrada", "opciones": ["Sí", "No"]},
+            {"pregunta": "Describe otros síntomas:", "tipo": "abierta"},
+        ]
+        self.root_layout.clear_widgets()
+        cuestionario = Cuestionario(preguntas=preguntas, finalizar_callback=self.mostrar_resultado)
+        self.root_layout.add_widget(cuestionario)
+
+    def mostrar_resultado(self, respuestas):
+        # Procesar respuestas y mostrar diagnóstico
+        diagnostico = "Hongo identificado. Aplicar tratamiento antifúngico cada 2 semanas."
+        self.root_layout.clear_widgets()
+        resultado = Resultado(
+            diagnostico=diagnostico,
+            menu_principal_callback=self.mostrar_menu_principal,
+            abrir_chatbot_callback=self.abrir_chatbot,
+            salir_callback=self.salir_app
+        )
+        self.root_layout.add_widget(resultado)
+
+    def abrir_chatbot(self, *args):
+        # Abrir el chatbot desde la ruta correcta
+        from gui.chatbot import Chatbot
+        self.root_layout.clear_widgets()
+        chatbot = Chatbot(
+            menu_principal_callback=self.mostrar_menu_principal,
+            salir_callback=self.salir_app
+        )
+        self.root_layout.add_widget(chatbot)
+
+    def salir_app(self, *args):
+        # Detener la aplicación limpiamente
+        print("Cerrando la aplicación")
+        self.stop()
+
+
+if __name__ == '__main__':
+    MainApp().run()
